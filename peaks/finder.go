@@ -13,7 +13,7 @@ const bw = 2
 const minThreshold = 0
 const maxThreshold = 100
 const peakWindow = 1024
-const epsilon = 0.00001
+const epsilon = 0.000000001
 
 func calculateBackground(source []float64, workingSpace []float64, l1low float64, shift int, settings searchSettings) (background []float64) {
 	for i := 1; i <= settings.NumberIterations; i++ {
@@ -402,105 +402,39 @@ func SearchHighRes(source []float64, settings searchSettings) (fPositionX, backg
 		workingSpace[i+6*settings.SizeExtended] = workingSpace[i+settings.SizeExtended]
 	}
 
-	if settings.SmoothMarkov              {
-                for j := 0; j < settings.SizeExtended; j++ {
-									workingSpace[2*settings.SizeExtended + j] = workingSpace[settings.SizeExtended + j];
-								}
-                    
-                xmin := 0;
-								xmax := settings.SizeExtended - 1;
-								i := 0
-								plocha := 0.0
-								maxch := 0.0
-                for ; i < settings.SizeExtended; i++ {
-                    workingSpace[i] = 0;
-                    if (maxch < workingSpace[2*settings.SizeExtended + i]) {
-											maxch = workingSpace[2*settings.SizeExtended + i];
-										}
-                        
-                    plocha += workingSpace[2*settings.SizeExtended + i];
-                }
+	if settings.SmoothMarkov {
+		for j := 0; j < settings.SizeExtended; j++ {
+			workingSpace[2*settings.SizeExtended + j] = workingSpace[settings.SizeExtended + j];
+		}
 
-                nom := 1.0;
-								workingSpace[xmin] = 1;
-								nip := 0.0
-								nim := 0.0
-                for i := xmin; i < xmax; i++ {
-                    nip = workingSpace[2*settings.SizeExtended + i]/maxch;
-                    nim = workingSpace[2*settings.SizeExtended + i + 1]/maxch;
-                    sp := 0.0;
-                    sm := 0.0;
-                    for l := 1; l <= settings.AverageWindow; l++ {
-                        if ((i + l) > xmax) {
-													a = workingSpace[2*settings.SizeExtended + xmax]/maxch;
-												}  else {
-													a = workingSpace[2*settings.SizeExtended + i + l]/maxch;
-												}
-                            
-                        b = a - nip;
-                        if (a + nip <= 0) {
-													a = 1;
-												} else {
-													a = math.Sqrt(a + nip);
-												}
-                            
-                        b = b/a;
-                        b = math.Exp(b);
-                        sp = sp + b;
-                        if ((i - l + 1) < xmin) {
-													a = workingSpace[2*settings.SizeExtended + xmin]/maxch;
-												} else {
-													a = workingSpace[2*settings.SizeExtended + i - l + 1]/maxch;
-												}
-                            
-
-                        b = a - nim;
-                        if (a + nim <= 0) {
-													a = 1;
-												} else {
-													a = math.Sqrt(a + nim);
-												}
-                          
-                        b = b/a;
-                        b = math.Exp(b);
-                        sm = sm + b;
-                    }
-                    a = sp/sm;
-										workingSpace[i + 1] = workingSpace[i]*a;
-										a = workingSpace[i + 1]
-                    nom = nom + a;
-                }
-                for i = xmin; i <= xmax; i++ {
-                    workingSpace[i] = workingSpace[i]/nom;
-                }
-                for j := 0; j < settings.SizeExtended; j++ {
-									workingSpace[settings.SizeExtended + j] = workingSpace[j]*plocha;
-								}
-                    
-                for j := 0; j < settings.SizeExtended; j++ {
-                    workingSpace[2*settings.SizeExtended + j] = workingSpace[settings.SizeExtended + j];
-                }
-                if (settings.CalculateBackground == true) {
-                    for i = 1; i <= settings.NumberIterations; i++ {
-                        for j := i; j < settings.SizeExtended - i; j++ {
-                            a = workingSpace[settings.SizeExtended + j];
-                            b = (workingSpace[settings.SizeExtended + j - i] + workingSpace[settings.SizeExtended + j + i])/2.0;
-                            if (b < a) {
-															a = b;
-														}
-                                
-                            workingSpace[j] = a;
-                        }
-                        for j := i; j < settings.SizeExtended - i; j++ {
-													workingSpace[settings.SizeExtended + j] = workingSpace[j];
-												}
-                            
-                    }
-                    for j := 0; j < settings.SizeExtended; j++ {
-                        workingSpace[settings.SizeExtended + j] = workingSpace[2*settings.SizeExtended + j] - workingSpace[settings.SizeExtended + j];
-                    }
-                }
-            }
+		settingsCopy := settings
+		settingsCopy.Size = settings.SizeExtended
+		SmoothMarkov(workingSpace[2*settings.SizeExtended:2*settings.SizeExtended+settings.SizeExtended], settingsCopy)
+            
+    for j := 0; j < settings.SizeExtended; j++ {
+	 		workingSpace[settings.SizeExtended + j] = workingSpace[2*settings.SizeExtended + j]
+    }
+    if (settings.CalculateBackground == true) {
+      for i := 1; i <= settings.NumberIterations; i++ {
+          for j := i; j < settings.SizeExtended - i; j++ {
+              a = workingSpace[settings.SizeExtended + j];
+              b = (workingSpace[settings.SizeExtended + j - i] + workingSpace[settings.SizeExtended + j + i])/2.0;
+              if (b < a) {
+	 						a = b;
+	 					}
+                  
+              workingSpace[j] = a;
+          }
+          for j := i; j < settings.SizeExtended - i; j++ {
+	 				workingSpace[settings.SizeExtended + j] = workingSpace[j];
+	 			}
+              
+      }
+      for j := 0; j < settings.SizeExtended; j++ {
+        workingSpace[settings.SizeExtended + j] = workingSpace[2*settings.SizeExtended + j] - workingSpace[settings.SizeExtended + j];
+      }
+    }
+	}
 
 	maximum, maximum_decon := deconvolution(workingSpace, settings)
 
