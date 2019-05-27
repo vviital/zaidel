@@ -24989,7 +24989,7 @@ var resultTwo = `
       "area": 592.1005133025457
     }
   ],
-  "spectrumArea": 0,
+  "spectrumArea": 8108.837869690507,
   "destination": [
     0.9709636704512697,
     2.6128190393222126,
