@@ -10,8 +10,9 @@ import (
 
 // ElementDefinition represents element's info
 type ElementDefinition struct {
-	Intensity       int
+	Intensity       float64
 	IonizationStage int
+	Name            string
 	WaveLength      float64
 }
 
@@ -30,20 +31,23 @@ func parseRecord(slice []string) (ElementDefinition, string) {
 	if err != nil {
 		log.Panic(err)
 	}
-	intensity, err := strconv.Atoi(slice[2])
+	intensity, err := strconv.ParseFloat(slice[2], 64)
 	if err != nil {
 		log.Panic(err)
 	}
 
+	name := slice[1]
 	return ElementDefinition{
 		Intensity:       intensity,
 		IonizationStage: ionizationStage,
+		Name:            name,
 		WaveLength:      waveLength,
-	}, slice[1]
+	}, name
 }
 
 func parse() {
-	file, err := os.Open("./static/zaidel.txt")
+	// file, err := os.Open("./static/zaidel.txt")
+	file, err := os.Open("/Users/vviital/go/src/github.com/vviital/zaidel/static/zaidel.txt")
 	defer file.Close()
 
 	if err != nil {
@@ -71,6 +75,29 @@ func parse() {
 	}
 
 	log.Printf("%d records loaded from CSV file", len(Table))
+}
+
+// Predicate type
+type Predicate func(ElementDefinition) bool
+
+// GetRecordsByPredicate returns channels of elements which match predicate
+func GetRecordsByPredicate(fn Predicate) chan ElementDefinition {
+	ch := make(chan ElementDefinition, 10)
+
+	go func() {
+		defer close(ch)
+
+		for name, slice := range Table {
+			log.Print("processing ", name, " ", len(slice))
+			for _, el := range slice {
+				if fn(el) {
+					ch <- el
+				}
+			}
+		}
+	}()
+
+	return ch
 }
 
 func init() {
