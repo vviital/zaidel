@@ -15,8 +15,8 @@ var (
 	zaidel = database.WaveLengthBasedFinder
 )
 
-// DefaultSettings returns default settings
-func DefaultSettings() Settings {
+// NewDefaultSettings returns default settings
+func NewDefaultSettings() Settings {
 	return Settings{
 		WaveLengthRange:           0.05,
 		MaxIntensity:              100,
