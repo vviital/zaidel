@@ -8,21 +8,13 @@ import (
 	"strconv"
 )
 
-// ElementDefinition represents element's info
-type ElementDefinition struct {
-	Intensity       float64
-	IonizationStage int
-	Name            string
-	WaveLength      float64
-}
+// table with element's info
+var table TablePerElement
 
-// TablePerElement represent table per element
-type TablePerElement map[string][]ElementDefinition
+// WaveLengthBasedFinder is an interface for the Zaidel tables
+var WaveLengthBasedFinder Zaidel
 
-// Table with element's info
-var Table TablePerElement
-
-func parseRecord(slice []string) (ElementDefinition, string) {
+func parseRecord(slice []string) Element {
 	waveLength, err := strconv.ParseFloat(slice[0], 64)
 	if err != nil {
 		log.Panic(err)
@@ -36,13 +28,12 @@ func parseRecord(slice []string) (ElementDefinition, string) {
 		log.Panic(err)
 	}
 
-	name := slice[1]
-	return ElementDefinition{
+	return Element{
 		Intensity:       intensity,
 		IonizationStage: ionizationStage,
-		Name:            name,
+		Name:            slice[1],
 		WaveLength:      waveLength,
-	}, name
+	}
 }
 
 func parse() {
@@ -55,7 +46,8 @@ func parse() {
 	}
 
 	reader := csv.NewReader(file)
-	reader.Comma = '	'
+	reader.Comma = '\t'
+	count := 0
 
 	for i := 0; ; i++ {
 		record, err := reader.Read()
@@ -70,37 +62,16 @@ func parse() {
 			continue
 		}
 
-		element, name := parseRecord(record)
-		Table[name] = append(Table[name], element)
+		element := parseRecord(record)
+		table[element.Name] = append(table[element.Name], element)
+		count++
 	}
 
-	log.Printf("%d records loaded from CSV file", len(Table))
-}
-
-// Predicate type
-type Predicate func(ElementDefinition) bool
-
-// GetRecordsByPredicate returns channels of elements which match predicate
-func GetRecordsByPredicate(fn Predicate) chan ElementDefinition {
-	ch := make(chan ElementDefinition, 10)
-
-	go func() {
-		defer close(ch)
-
-		for name, slice := range Table {
-			log.Print("processing ", name, " ", len(slice))
-			for _, el := range slice {
-				if fn(el) {
-					ch <- el
-				}
-			}
-		}
-	}()
-
-	return ch
+	log.Printf("%d elements loaded from CSV file. Table contains %d records.", len(table), count)
 }
 
 func init() {
-	Table = make(map[string][]ElementDefinition)
+	table = make(map[string]Elements)
 	parse()
+	WaveLengthBasedFinder = newWaveLengthBasedFastFinder(table)
 }
