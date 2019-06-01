@@ -2,21 +2,19 @@ package spectrumlines
 
 import (
 	"context"
-	"encoding/json"
-	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
 func TestFind(t *testing.T) {
-	peaks := Find(context.Background(), peaksOne, DefaultSettings())
-	// fmt.Println("--- peaks ---", peaks)
+	t.Run("first peaks json", func(t *testing.T) {
+		spectrumLines := Find(context.Background(), peaksOne, DefaultSettings())
+		assert.Equal(t, spectrumLinesOne, spectrumLines)
+	})
 
-	bts, err := json.Marshal(peaks)
-
-	fmt.Println("--- err ---", err)
-	fmt.Println(string(bts))
-
-	assert.Equal(t, true, false)
+	t.Run("second peaks json", func(t *testing.T) {
+		spectrumLines := Find(context.Background(), peaksTwo, DefaultSettings())
+		assert.Equal(t, spectrumLinesTwo, spectrumLines)
+	})
 }

@@ -76,9 +76,9 @@ func NewDefaultSettings() PeakSearchSettings {
 
 // Peak struct
 type Peak struct {
-	Point geometry.Coordinate `json:"point"`
-	Left  geometry.Coordinate `json:"pointLeft"`
-	Right geometry.Coordinate `json:"pointRight"`
+	Point geometry.Coordinate `json:"peak"`
+	Left  geometry.Coordinate `json:"leftBorder"`
+	Right geometry.Coordinate `json:"rightBorder"`
 	Area  float64             `json:"area"`
 }
 

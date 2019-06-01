@@ -6,10 +6,10 @@ const epsilon = 0.000000001
 
 // Element represents element's info
 type Element struct {
-	Intensity       float64
-	IonizationStage int
-	Name            string
-	WaveLength      float64
+	Intensity       float64 `json:"intensity"`
+	IonizationStage int     `json:"ionizationStage"`
+	Name            string  `json:"element"`
+	WaveLength      float64 `json:"waveLength"`
 }
 
 // Elements represent slice of elements

@@ -3,39 +3,17 @@ package spectrumlines
 import (
 	"context"
 	"math"
-	"sync"
+	"sort"
 
 	"github.com/vviital/zaidel/database"
 	"github.com/vviital/zaidel/peaks"
 )
 
-// Settings represents settings for the spectrum line search
-type Settings struct {
-	MaxIntensity              float64
-	MaxIonizationLevel        int
-	MinIntensity              float64
-	SearchInMostSuitableGroup bool
-	WaveLengthRange           float64
-	waveLengthCoefficient     float64
-}
+const epsilon = 0.000000001
 
-// Element struct
-type Element struct {
-	database.ElementDefinition
-	IsSearchCriteriaMatched bool
-	Distance                float64
-}
-
-func (s *Settings) setWaveLengthCoefficient(peaks []peaks.Peak) {
-	s.waveLengthCoefficient = 1
-
-	for _, p := range peaks {
-		if p.Point.X > 2000 {
-			s.waveLengthCoefficient = 0.1
-			break
-		}
-	}
-}
+var (
+	zaidel = database.WaveLengthBasedFinder
+)
 
 // DefaultSettings returns default settings
 func DefaultSettings() Settings {
@@ -48,105 +26,62 @@ func DefaultSettings() Settings {
 	}
 }
 
-// DeterminedPeak represent final result struct
-type DeterminedPeak struct {
-	peaks.Peak
-	Elements []Element
-}
-
-func matcheElementAndPeak(peak peaks.Peak, element Element, settings Settings) (float64, bool) {
-	baseValue := element.WaveLength / settings.waveLengthCoefficient
-	distance := math.Abs(peak.Point.X - baseValue)
-
-	if distance > settings.WaveLengthRange {
-		return 0, false
-	}
-
-	return 1 - distance/settings.WaveLengthRange, true
-}
-
-func getMatchedBySettingsPredicate(settings Settings) database.Predicate {
-	return func(element database.ElementDefinition) bool {
-		isMatched := (settings.MaxIntensity > 0 && element.Intensity < settings.MaxIntensity) ||
-			(settings.MinIntensity > 0 && element.Intensity > settings.MinIntensity) ||
-			(settings.MaxIonizationLevel > 0 && element.IonizationStage < settings.MaxIonizationLevel)
-		return isMatched
-	}
-}
-
-func getNotMatchedBySettingsPredicate(settings Settings) database.Predicate {
-	isMatched := getMatchedBySettingsPredicate(settings)
-	return func(element database.ElementDefinition) bool {
-		return !isMatched(element)
-	}
-}
-
-func combineElements(matched chan database.ElementDefinition, notMatched chan database.ElementDefinition) chan Element {
-	elements := make(chan Element, 10)
-	var wg sync.WaitGroup
-
-	push := func(els chan database.ElementDefinition, isMatched bool) {
-		for e := range els {
-			elements <- Element{ElementDefinition: e, IsSearchCriteriaMatched: isMatched}
-		}
-		wg.Done()
-	}
+func getPeakWithElements(peak peaks.Peak, settings Settings, elements chan database.Element) chan DeterminedPeak {
+	ch := make(chan DeterminedPeak)
 
 	go func() {
-		defer close(elements)
-		wg.Add(2)
-
-		go push(matched, true)
-		go push(notMatched, false)
-
-		wg.Wait()
-	}()
-
-	return elements
-}
-
-func processElements(pts []peaks.Peak, settings Settings, elements chan Element) chan DeterminedPeak {
-	res := make(chan DeterminedPeak, len(pts))
-	detPeaks := make([]DeterminedPeak, len(pts))
-
-	for i, pt := range pts {
-		detPeaks[i].Peak = pt
-	}
-
-	go func() {
-		defer close(res)
+		defer close(ch)
+		detPeak := DeterminedPeak{Peak: peak}
 
 		for el := range elements {
-			for i, pt := range pts {
-				if d, ok := matcheElementAndPeak(pt, el, settings); ok {
-					e := el
-					e.Distance = d
-					detPeaks[i].Elements = append(detPeaks[i].Elements, e)
-				}
-			}
+			detPeak.Elements = append(detPeak.Elements, Element{
+				Element:                 el,
+				Distance:                1 - math.Abs(peak.Point.X-el.WaveLength)/settings.WaveLengthRange,
+				IsSearchCriteriaMatched: isMatched(el, settings),
+			})
 		}
 
-		for _, peak := range detPeaks {
-			res <- peak
+		if detPeak.Elements != nil {
+			// sort elements in desc order by similarity to the given peak
+			sort.Slice(detPeak.Elements, func(i, j int) bool {
+				if diff := detPeak.Elements[i].Distance - detPeak.Elements[j].Distance; diff >= epsilon {
+					return true
+				} else if math.Abs(diff) <= epsilon {
+					return detPeak.Elements[i].Name < detPeak.Elements[j].Name
+				}
+				return false
+			})
 		}
+
+		ch <- detPeak
 	}()
 
-	return res
+	return ch
+}
+
+func isMatched(element database.Element, settings Settings) bool {
+	return (settings.MaxIntensity > 0 && element.Intensity < settings.MaxIntensity) ||
+		(settings.MinIntensity > 0 && element.Intensity > settings.MinIntensity) ||
+		(settings.MaxIonizationLevel > 0 && element.IonizationStage < settings.MaxIonizationLevel)
 }
 
 // Find returns enhanced peaks with chemical elements
 func Find(ctx context.Context, points []peaks.Peak, settings Settings) (res []DeterminedPeak) {
-	settings.setWaveLengthCoefficient(points)
+	var channels []chan DeterminedPeak
+	res = make([]DeterminedPeak, len(points))
 
-	elements := combineElements(
-		database.GetRecordsByPredicate(getMatchedBySettingsPredicate(settings)),
-		database.GetRecordsByPredicate(getNotMatchedBySettingsPredicate(settings)),
-	)
+	for _, peak := range points {
+		criteria := database.SearchCriteria{
+			MinWaveLength: peak.Point.X - settings.WaveLengthRange,
+			MaxWaveLength: peak.Point.X + settings.WaveLengthRange,
+		}
+		c := zaidel.FindElements(criteria)
 
-	detPeaks := processElements(points, settings, elements)
+		channels = append(channels, getPeakWithElements(peak, settings, c))
+	}
 
-	for p := range detPeaks {
-		res = append(res, p)
+	for i, ch := range channels {
+		res[i] = <-ch
 	}
 
 	return
