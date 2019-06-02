@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 	"os"
+	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
 
@@ -62,7 +63,9 @@ func initPeaksCollection() {
 func init() {
 	var err error
 	url, _ := os.LookupEnv("MONGODB_URL")
-	ctx := context.Background()
+	// panic if cannot istablished connection to the MongoDB in 10 seconds
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
 
 	client, err = mongo.NewClient(options.Client().ApplyURI(url))
 	exit(err)
