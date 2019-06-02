@@ -9,7 +9,13 @@ import (
 
 // V1CalculatePeaks responds with calculated peaks to the client
 func V1CalculatePeaks(w http.ResponseWriter, r *http.Request) {
-
+	body := V1CalculatePeaksRequestFromRequestBody(r)
+	foundPeaks, err := peaks.Find(body.Points.ToPoints(), body.Settings)
+	if err != nil {
+		sendError(w, err, http.StatusBadRequest)
+		return
+	}
+	sendJSON(w, V1ResponseSpectrumPeaksFromFinderResult(foundPeaks, body.Settings))
 }
 
 // V1GetPeaksByID responds with peaks by ID
@@ -29,7 +35,9 @@ func V1GetDefaultSettingsForPeaks(w http.ResponseWriter, r *http.Request) {
 
 // V1CalculateSpectrumLines responds with calculated spectrumlines to the client
 func V1CalculateSpectrumLines(w http.ResponseWriter, r *http.Request) {
-
+	body := V1CalculateSpectrumLinesRequestFromRequestBody(r)
+	foundLines := spectrumlines.Find(r.Context(), body.Peaks, body.Settings)
+	sendJSON(w, V1ResponseSpectrumLinesFromFinderResult(foundLines, body.Settings))
 }
 
 // V1GetDefaultSettingsForSpectrumLines responds with default settings for the spectum lines finder to the client

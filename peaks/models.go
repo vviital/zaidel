@@ -39,7 +39,7 @@ type PeakSearchSettings struct {
 	DeconvolutionIterations int     `json:"deconvolutionIterations"`
 	Sigma                   float64 `json:"sigma"`
 	SmoothMarkov            bool    `json:"smoothMarkov"`
-	Threshold               float64 `json:"threshold`
+	Threshold               float64 `json:"threshold"`
 }
 
 type searchSettings struct {

@@ -555,11 +555,11 @@ func validateParams(settings searchSettings) error {
 }
 
 // Find return information about peaks
-func Find(points geometry.Coordinates, peakSearchSettings PeakSearchSettings) FinderResult {
+func Find(points geometry.Coordinates, peakSearchSettings PeakSearchSettings) (FinderResult, error) {
 	settings := newSearchSettings(points, peakSearchSettings)
 
 	if err := validateParams(settings); err != nil {
-		return FinderResult{}
+		return FinderResult{}, err
 	}
 
 	ys := points.GetYs()
@@ -567,7 +567,7 @@ func Find(points geometry.Coordinates, peakSearchSettings PeakSearchSettings) Fi
 	fPositionX, background, peaksCount, err := SearchHighRes(ys, settings)
 
 	if err != nil {
-		return FinderResult{}
+		return FinderResult{}, err
 	}
 
 	var peaks []Peak
@@ -575,7 +575,7 @@ func Find(points geometry.Coordinates, peakSearchSettings PeakSearchSettings) Fi
 	err = SmoothMarkov(waveletList, settings)
 
 	if err != nil {
-		return FinderResult{}
+		return FinderResult{}, err
 	}
 
 	waveletData := CombineCoordinatesWithFloats(points, waveletList)
@@ -621,5 +621,5 @@ func Find(points geometry.Coordinates, peakSearchSettings PeakSearchSettings) Fi
 		PeaksCount:             peaksCount,
 		SpectrumArea:           geometry.CalculateSpectrumArea(points, backgroundData),
 		WaveletData:            waveletData,
-	}
+	}, nil
 }

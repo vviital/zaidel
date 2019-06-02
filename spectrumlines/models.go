@@ -26,7 +26,7 @@ type Element struct {
 // DeterminedPeak represent final result struct
 type DeterminedPeak struct {
 	peaks.Peak
-	Elements []Element
+	Elements []Element `json:"elements"`
 }
 
 // ToJSON returns json serialization of peak with matched elements
