@@ -3,6 +3,7 @@ package handler
 import (
 	"encoding/json"
 	"net/http"
+	"time"
 
 	peaksdatasource "github.com/vviital/zaidel/datasource/peaks"
 	"github.com/vviital/zaidel/peaks"
@@ -11,6 +12,7 @@ import (
 
 // V1ResponseSpectrumPeaks represents peaks response to the client
 type V1ResponseSpectrumPeaks struct {
+	Created                time.Time                `json:"created"`
 	ID                     string                   `json:"id"`
 	OriginalPeaksPositions []float64                `json:"originalPeaksPositions,omitempty"`
 	OwnerID                string                   `json:"ownerId"`
@@ -18,6 +20,7 @@ type V1ResponseSpectrumPeaks struct {
 	PeaksCount             int                      `json:"peaksCount"`
 	Settings               peaks.PeakSearchSettings `json:"settings"`
 	SpectrumArea           float64                  `json:"spectrumArea"`
+	Updated                time.Time                `json:"updated"`
 }
 
 // V1ResponseSpectrumPeaksFromDatasource remap inner data structure to the client's expected result
@@ -29,6 +32,8 @@ func V1ResponseSpectrumPeaksFromDatasource(result peaksdatasource.PeaksModel) (r
 	resp.PeaksCount = result.PeaksCount
 	resp.Settings = result.Settings
 	resp.SpectrumArea = result.SpectrumArea
+	resp.Created = result.Created
+	resp.Updated = result.Updated
 	return
 }
 

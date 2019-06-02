@@ -37,10 +37,14 @@ func (c *mongoPeaks) FindByID(ctx context.Context, id string) (model PeaksModel,
 
 func (c *mongoPeaks) InsertOne(ctx context.Context, obj peaks.FinderResult, settings peaks.PeakSearchSettings, ownerID string) (model PeaksModel, err error) {
 	id, _ := uuid.NewRandom()
+	now := time.Now().UTC()
+
 	model.FinderResult = obj
 	model.Settings = settings
 	model.OwnerID = ownerID
 	model.ID = id.String()
+	model.Created = now
+	model.Updated = now
 	_, err = c.collection.InsertOne(ctx, model)
 	if err != nil {
 		model = PeaksModel{}
@@ -74,13 +78,14 @@ func initPeaksCollection() {
 		},
 		{
 			name:       "peaks_owner_id_search_key_index",
-			fields:     []string{"ownerId"},
+			fields:     []string{"ownerid"},
 			types:      []interface{}{1},
 			background: true,
 		},
 	}
 
-	indexes := client.Database("zaidel").Collection("peaks").Indexes()
+	collection = client.Database("zaidel").Collection("peaks")
+	indexes := collection.Indexes()
 
 	for _, d := range definitions {
 		keys := bson.D{}
@@ -88,8 +93,9 @@ func initPeaksCollection() {
 			keys = append(keys, bson.E{Key: d.fields[i], Value: d.types[i]})
 		}
 		options := options.Index().SetBackground(d.background).SetUnique(d.unique).SetName(d.name)
-		_, err := indexes.CreateOne(ctx, mongo.IndexModel{Keys: keys, Options: options})
+		name, err := indexes.CreateOne(ctx, mongo.IndexModel{Keys: keys, Options: options})
 		exit(err)
+		log.Printf("%s index was added", name)
 	}
 }
 

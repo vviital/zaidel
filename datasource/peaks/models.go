@@ -2,6 +2,7 @@ package peaks
 
 import (
 	"context"
+	"time"
 
 	"github.com/vviital/zaidel/peaks"
 )
@@ -12,6 +13,8 @@ type PeaksModel struct {
 	Settings peaks.PeakSearchSettings `json:"settings"`
 	ID       string                   `json:"id"`
 	OwnerID  string                   `json:"ownerId"`
+	Created  time.Time                `json:"created"`
+	Updated  time.Time                `json:"updated"`
 }
 
 // Peaks interface
