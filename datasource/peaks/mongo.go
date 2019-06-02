@@ -102,7 +102,7 @@ func initPeaksCollection() {
 func init() {
 	var err error
 	url, _ := os.LookupEnv("MONGODB_URL")
-	// panic if cannot istablished connection to the MongoDB in 10 seconds
+	// panic if cannot establish connection to the MongoDB in 10 seconds
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
