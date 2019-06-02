@@ -47,7 +47,20 @@ func V1GetPeaksByID(w http.ResponseWriter, r *http.Request) {
 
 // V1UpdatePeaksByID responds with peaks by ID
 func V1UpdatePeaksByID(w http.ResponseWriter, r *http.Request) {
-
+	id := mux.Vars(r)["id"]
+	if id == "" {
+		sendError(w, errors.New("ID must be provided"), 400)
+		return
+	}
+	body := V1UpdatePeaksRequestFromRequestBody(r)
+	updatedModel, err := peaksDatasource.Update(r.Context(), peaksdatasource.PeaksModel{
+		FinderResult: peaks.FinderResult{Peaks: body.Peaks},
+	}, id)
+	if err != nil {
+		sendError(w, err, 400)
+		return
+	}
+	sendJSON(w, V1ResponseSpectrumPeaksFromDatasource(updatedModel))
 }
 
 // V1GetDefaultSettingsForPeaks responds with default settings for the peaks finder to the client

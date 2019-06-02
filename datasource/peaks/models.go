@@ -21,4 +21,5 @@ type PeaksModel struct {
 type Peaks interface {
 	FindByID(context.Context, string) (PeaksModel, error)
 	InsertOne(context.Context, peaks.FinderResult, peaks.PeakSearchSettings, string) (PeaksModel, error)
+	Update(context.Context, PeaksModel, string) (PeaksModel, error)
 }

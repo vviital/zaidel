@@ -52,6 +52,19 @@ func V1CalculatePeaksRequestFromRequestBody(r *http.Request) (body V1CalculatePe
 	return
 }
 
+// V1UpdatePeaksRequest object structure
+type V1UpdatePeaksRequest struct {
+	Peaks   []peaks.Peak `json:"peaks"`
+	OwnerID string       `json:"ownerId"`
+}
+
+// V1UpdatePeaksRequestFromRequestBody returns V1CalculatePeaksRequest object from request body
+func V1UpdatePeaksRequestFromRequestBody(r *http.Request) (body V1UpdatePeaksRequest) {
+	defer r.Body.Close()
+	json.NewDecoder(r.Body).Decode(&body)
+	return
+}
+
 // V1CalculateSpectrumLinesRequest object structure
 type V1CalculateSpectrumLinesRequest struct {
 	Peaks    []peaks.Peak           `json:"peaks"`
