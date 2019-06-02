@@ -1,11 +1,18 @@
 package handler
 
 import (
+	"errors"
 	"net/http"
+
+	"github.com/gorilla/mux"
 
 	"github.com/vviital/zaidel/peaks"
 	"github.com/vviital/zaidel/spectrumlines"
+
+	peaksdatasource "github.com/vviital/zaidel/datasource/peaks"
 )
+
+var peaksDatasource peaksdatasource.Peaks
 
 // V1CalculatePeaks responds with calculated peaks to the client
 func V1CalculatePeaks(w http.ResponseWriter, r *http.Request) {
@@ -15,12 +22,27 @@ func V1CalculatePeaks(w http.ResponseWriter, r *http.Request) {
 		sendError(w, err, http.StatusBadRequest)
 		return
 	}
-	sendJSON(w, V1ResponseSpectrumPeaksFromFinderResult(foundPeaks, body.Settings))
+	savedPeaks, err := peaksDatasource.InsertOne(r.Context(), foundPeaks, body.Settings, body.OwnerID)
+	if err != nil {
+		sendError(w, err, http.StatusBadRequest)
+		return
+	}
+	sendJSON(w, V1ResponseSpectrumPeaksFromDatasource(savedPeaks))
 }
 
 // V1GetPeaksByID responds with peaks by ID
 func V1GetPeaksByID(w http.ResponseWriter, r *http.Request) {
-
+	id := mux.Vars(r)["id"]
+	if id == "" {
+		sendError(w, errors.New("ID must be provided"), 400)
+		return
+	}
+	foundPeaks, err := peaksDatasource.FindByID(r.Context(), id)
+	if err != nil {
+		sendError(w, err, 400)
+		return
+	}
+	sendJSON(w, V1ResponseSpectrumPeaksFromDatasource(foundPeaks))
 }
 
 // V1UpdatePeaksByID responds with peaks by ID
@@ -53,4 +75,8 @@ func V1GetSpectrumLinesByID(w http.ResponseWriter, r *http.Request) {
 // V1UpdateSpectrumLinesByID responds with peaks by ID
 func V1UpdateSpectrumLinesByID(w http.ResponseWriter, r *http.Request) {
 
+}
+
+func init() {
+	peaksDatasource = peaksdatasource.NewMongoPeaks()
 }

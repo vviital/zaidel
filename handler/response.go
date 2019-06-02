@@ -4,26 +4,30 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/vviital/zaidel/spectrumlines"
-
+	peaksdatasource "github.com/vviital/zaidel/datasource/peaks"
 	"github.com/vviital/zaidel/peaks"
+	"github.com/vviital/zaidel/spectrumlines"
 )
 
 // V1ResponseSpectrumPeaks represents peaks response to the client
 type V1ResponseSpectrumPeaks struct {
-	Settings               peaks.PeakSearchSettings `json:"settings"`
-	PeaksCount             int                      `json:"peaksCount"`
+	ID                     string                   `json:"id"`
 	OriginalPeaksPositions []float64                `json:"originalPeaksPositions,omitempty"`
+	OwnerID                string                   `json:"ownerId"`
 	Peaks                  []peaks.Peak             `json:"peaks,omitempty"`
+	PeaksCount             int                      `json:"peaksCount"`
+	Settings               peaks.PeakSearchSettings `json:"settings"`
 	SpectrumArea           float64                  `json:"spectrumArea"`
 }
 
-// V1ResponseSpectrumPeaksFromFinderResult remap inner data structure to the client's expected result
-func V1ResponseSpectrumPeaksFromFinderResult(result peaks.FinderResult, settings peaks.PeakSearchSettings) (resp V1ResponseSpectrumPeaks) {
+// V1ResponseSpectrumPeaksFromDatasource remap inner data structure to the client's expected result
+func V1ResponseSpectrumPeaksFromDatasource(result peaksdatasource.PeaksModel) (resp V1ResponseSpectrumPeaks) {
+	resp.ID = result.ID
+	resp.OwnerID = result.OwnerID
 	resp.OriginalPeaksPositions = result.OriginalPeaksPositions
 	resp.Peaks = result.Peaks
 	resp.PeaksCount = result.PeaksCount
-	resp.Settings = settings
+	resp.Settings = result.Settings
 	resp.SpectrumArea = result.SpectrumArea
 	return
 }

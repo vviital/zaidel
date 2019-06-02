@@ -42,6 +42,7 @@ func (pts V1RequestSpectrumPoints) ToPoints() geometry.Coordinates {
 type V1CalculatePeaksRequest struct {
 	Points   V1RequestSpectrumPoints  `json:"points"`
 	Settings peaks.PeakSearchSettings `json:"settings"`
+	OwnerID  string                   `json:"ownerId"`
 }
 
 // V1CalculatePeaksRequestFromRequestBody returns V1CalculatePeaksRequest object from request body
