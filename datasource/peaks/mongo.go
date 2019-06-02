@@ -56,8 +56,41 @@ func exit(err error) {
 }
 
 func initPeaksCollection() {
-	collection = client.Database("zaidel").Collection("peaks")
+	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
+	defer cancel()
 
+	definitions := []struct {
+		name       string
+		background bool
+		unique     bool
+		fields     []string
+		types      []interface{}
+	}{
+		{
+			name:       "peaks_id_primary_key_index",
+			fields:     []string{"id"},
+			types:      []interface{}{"hashed"},
+			background: true,
+		},
+		{
+			name:       "peaks_owner_id_search_key_index",
+			fields:     []string{"ownerId"},
+			types:      []interface{}{1},
+			background: true,
+		},
+	}
+
+	indexes := client.Database("zaidel").Collection("peaks").Indexes()
+
+	for _, d := range definitions {
+		keys := bson.D{}
+		for i := range d.fields {
+			keys = append(keys, bson.E{Key: d.fields[i], Value: d.types[i]})
+		}
+		options := options.Index().SetBackground(d.background).SetUnique(d.unique).SetName(d.name)
+		_, err := indexes.CreateOne(ctx, mongo.IndexModel{Keys: keys, Options: options})
+		exit(err)
+	}
 }
 
 func init() {
