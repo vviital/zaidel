@@ -137,6 +137,7 @@
     }
   ],
   "settings": {
+    "maxElementsPerPeak": 20,
     "maxIntensity": 100,
     "maxIonizationLevel": 100,
     "minIntensity": 1,

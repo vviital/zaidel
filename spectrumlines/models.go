@@ -9,6 +9,7 @@ import (
 
 // Settings represents settings for the spectrum line search
 type Settings struct {
+	MaxElementsPerPeak        int     `json:"maxElementsPerPeak"`
 	MaxIntensity              float64 `json:"maxIntensity"`
 	MaxIonizationLevel        int     `json:"maxIonizationLevel"`
 	MinIntensity              float64 `json:"minIntensity"`
@@ -26,7 +27,8 @@ type Element struct {
 // DeterminedPeak represent final result struct
 type DeterminedPeak struct {
 	peaks.Peak
-	Elements []Element `json:"elements"`
+	Elements           []Element `json:"elements,omitempty"`
+	TotalElementsCount int       `json:"totalElementsCount"`
 }
 
 // ToJSON returns json serialization of peak with matched elements

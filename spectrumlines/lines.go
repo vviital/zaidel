@@ -18,11 +18,12 @@ var (
 // NewDefaultSettings returns default settings
 func NewDefaultSettings() Settings {
 	return Settings{
-		WaveLengthRange:           0.05,
+		MaxElementsPerPeak:        20,
 		MaxIntensity:              100,
+		MaxIonizationLevel:        100,
 		MinIntensity:              1,
 		SearchInMostSuitableGroup: false,
-		MaxIonizationLevel:        100,
+		WaveLengthRange:           0.05,
 	}
 }
 
@@ -51,6 +52,13 @@ func getPeakWithElements(peak peaks.Peak, settings Settings, elements chan datab
 				}
 				return false
 			})
+
+			nextSize := len(detPeak.Elements)
+			detPeak.TotalElementsCount = nextSize
+			if nextSize > settings.MaxElementsPerPeak {
+				nextSize = settings.MaxElementsPerPeak
+			}
+			detPeak.Elements = detPeak.Elements[0:nextSize]
 		}
 
 		ch <- detPeak
