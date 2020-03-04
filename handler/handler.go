@@ -90,6 +90,12 @@ func V1UpdateSpectrumLinesByID(w http.ResponseWriter, r *http.Request) {
 
 }
 
+func V1HealthCheck(w http.ResponseWriter, r *http.Request) {
+	sendJSON(w, struct {
+		Ok bool `json:"ok"`
+	}{Ok: true})
+}
+
 func init() {
 	peaksDatasource = peaksdatasource.NewMongoPeaks()
 }

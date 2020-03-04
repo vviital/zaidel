@@ -37,8 +37,7 @@ func parseRecord(slice []string) Element {
 }
 
 func parse() {
-	// file, err := os.Open("./static/zaidel.txt")
-	file, err := os.Open("/Users/vviital/go/src/github.com/vviital/zaidel/static/zaidel.txt")
+	file, err := os.Open("./static/zaidel.txt")
 	defer file.Close()
 
 	if err != nil {

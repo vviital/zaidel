@@ -24,9 +24,11 @@ func main() {
 	r.HandleFunc("/spectrumlines/{id}", handler.V1GetSpectrumLinesByID).Methods(http.MethodPut, http.MethodPatch)
 	r.HandleFunc("/spectrumlines", handler.V1CalculateSpectrumLines).Methods(http.MethodPost)
 
+	r.HandleFunc("/service/health", handler.V1HealthCheck).Methods(http.MethodGet)
+
 	srv := &http.Server{
 		Handler:      r,
-		Addr:         "127.0.0.1:8000",
+		Addr:         ":3000",
 		WriteTimeout: 15 * time.Second,
 		ReadTimeout:  15 * time.Second,
 	}

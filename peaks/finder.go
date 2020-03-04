@@ -390,56 +390,50 @@ func getLDA(settings searchSettings) (lda float64) {
 func SearchHighRes(source []float64, settings searchSettings) (fPositionX, background []float64, peakIndex int, err error) {
 	var a, b float64
 	var shift = settings.NumberIterations
-
 	l1low := getL1Low(source, (int)(2*settings.Sigma+0.5))
 	workingSpace := createWorkingSpace(source, l1low, settings)
 
 	if settings.CalculateBackground {
 		background = calculateBackground(source, workingSpace, l1low, shift, settings)
 	}
-
 	for i := 0; i < settings.SizeExtended; i++ {
 		workingSpace[i+6*settings.SizeExtended] = workingSpace[i+settings.SizeExtended]
 	}
-
 	if settings.SmoothMarkov {
 		for j := 0; j < settings.SizeExtended; j++ {
-			workingSpace[2*settings.SizeExtended + j] = workingSpace[settings.SizeExtended + j];
+			workingSpace[2*settings.SizeExtended+j] = workingSpace[settings.SizeExtended+j]
 		}
 
 		settingsCopy := settings
 		settingsCopy.Size = settings.SizeExtended
 		SmoothMarkov(workingSpace[2*settings.SizeExtended:2*settings.SizeExtended+settings.SizeExtended], settingsCopy)
-            
-    for j := 0; j < settings.SizeExtended; j++ {
-	 		workingSpace[settings.SizeExtended + j] = workingSpace[2*settings.SizeExtended + j]
-    }
-    if (settings.CalculateBackground == true) {
-      for i := 1; i <= settings.NumberIterations; i++ {
-          for j := i; j < settings.SizeExtended - i; j++ {
-              a = workingSpace[settings.SizeExtended + j];
-              b = (workingSpace[settings.SizeExtended + j - i] + workingSpace[settings.SizeExtended + j + i])/2.0;
-              if (b < a) {
-	 						a = b;
-	 					}
-                  
-              workingSpace[j] = a;
-          }
-          for j := i; j < settings.SizeExtended - i; j++ {
-	 				workingSpace[settings.SizeExtended + j] = workingSpace[j];
-	 			}
-              
-      }
-      for j := 0; j < settings.SizeExtended; j++ {
-        workingSpace[settings.SizeExtended + j] = workingSpace[2*settings.SizeExtended + j] - workingSpace[settings.SizeExtended + j];
-      }
-    }
+
+		for j := 0; j < settings.SizeExtended; j++ {
+			workingSpace[settings.SizeExtended+j] = workingSpace[2*settings.SizeExtended+j]
+		}
+		if settings.CalculateBackground == true {
+			for i := 1; i <= settings.NumberIterations; i++ {
+				for j := i; j < settings.SizeExtended-i; j++ {
+					a = workingSpace[settings.SizeExtended+j]
+					b = (workingSpace[settings.SizeExtended+j-i] + workingSpace[settings.SizeExtended+j+i]) / 2.0
+					if b < a {
+						a = b
+					}
+
+					workingSpace[j] = a
+				}
+				for j := i; j < settings.SizeExtended-i; j++ {
+					workingSpace[settings.SizeExtended+j] = workingSpace[j]
+				}
+
+			}
+			for j := 0; j < settings.SizeExtended; j++ {
+				workingSpace[settings.SizeExtended+j] = workingSpace[2*settings.SizeExtended+j] - workingSpace[settings.SizeExtended+j]
+			}
+		}
 	}
-
 	maximum, maximum_decon := deconvolution(workingSpace, settings)
-
 	peakIndex, fPositionX = findPeaksInTheSpectrum(workingSpace, getLDA(settings), maximum_decon, maximum, settings)
-
 	return
 }
 
