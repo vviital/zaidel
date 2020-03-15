@@ -2,6 +2,7 @@ package handler
 
 import (
 	"errors"
+	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -9,6 +10,7 @@ import (
 	"github.com/vviital/zaidel/peaks"
 	"github.com/vviital/zaidel/spectrumlines"
 
+	"github.com/vviital/zaidel/datasource/files"
 	peaksdatasource "github.com/vviital/zaidel/datasource/peaks"
 )
 
@@ -17,13 +19,24 @@ var peaksDatasource peaksdatasource.Peaks
 // V1CalculatePeaks responds with calculated peaks to the client
 func V1CalculatePeaks(w http.ResponseWriter, r *http.Request) {
 	body := V1CalculatePeaksRequestFromRequestBody(r)
-	foundPeaks, err := peaks.Find(body.Points.ToPoints(), body.Settings)
+
+	file, err := files.GetByID(body.FileID, extractInternalForwardableHeaders(r))
 	if err != nil {
+		log.Print(err)
 		sendError(w, err, http.StatusBadRequest)
 		return
 	}
+
+	foundPeaks, err := peaks.Find(file.GetPoints(), body.Settings)
+	if err != nil {
+		log.Print(err)
+		sendError(w, err, http.StatusBadRequest)
+		return
+	}
+
 	savedPeaks, err := peaksDatasource.InsertOne(r.Context(), foundPeaks, body.Settings, body.OwnerID)
 	if err != nil {
+		log.Print(err)
 		sendError(w, err, http.StatusBadRequest)
 		return
 	}

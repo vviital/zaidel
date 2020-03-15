@@ -26,8 +26,9 @@ func TestFind(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			r := Find(tt.input.GetPoints(), NewDefaultSettings())
+			r, err := Find(tt.input.GetPoints(), NewDefaultSettings())
 
+			assert.Nil(t, err)
 			assert.Equal(t, tt.output.PeaksCount, r.PeaksCount)
 			assert.Equal(t, tt.output.Peaks, r.Peaks)
 			assert.Equal(t, tt.output.BackgroundData, r.BackgroundData)

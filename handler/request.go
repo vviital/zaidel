@@ -40,7 +40,7 @@ func (pts V1RequestSpectrumPoints) ToPoints() geometry.Coordinates {
 
 // V1CalculatePeaksRequest object structure
 type V1CalculatePeaksRequest struct {
-	Points   V1RequestSpectrumPoints  `json:"points"`
+	FileID   string                   `json:"fileID"`
 	Settings peaks.PeakSearchSettings `json:"settings"`
 	OwnerID  string                   `json:"ownerId"`
 }
@@ -76,4 +76,12 @@ func V1CalculateSpectrumLinesRequestFromRequestBody(r *http.Request) (body V1Cal
 	defer r.Body.Close()
 	json.NewDecoder(r.Body).Decode(&body)
 	return
+}
+
+func extractInternalForwardableHeaders(r *http.Request) http.Header {
+	var headers = make(http.Header)
+
+	headers.Add("Authorization", r.Header.Get("Authorization"))
+
+	return headers
 }

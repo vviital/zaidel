@@ -8,8 +8,8 @@ var SpectrumOne Spectrum
 var ResultOne FinderResult
 
 func init() {
-  json.Unmarshal([]byte(spectrumOne), &SpectrumOne)
-  json.Unmarshal([]byte(resultOne), &ResultOne)
+	json.Unmarshal([]byte(spectrumOne), &SpectrumOne)
+	json.Unmarshal([]byte(resultOne), &ResultOne)
 }
 
 var spectrumOne = `
@@ -24708,11 +24708,11 @@ var resultOne = `
         "x": 324.754,
         "y": 13518
       },
-      "leftBorder": {
+      "left": {
         "x": 324.037035019455,
         "y": 592.666666666667
       },
-      "rightBorder": {
+      "right": {
         "x": 325.354454545455,
         "y": 604.333333333333
       },
@@ -24723,11 +24723,11 @@ var resultOne = `
         "x": 327.396,
         "y": 10168
       },
-      "leftBorder": {
+      "left": {
         "x": 326.795545454545,
         "y": 632.666666666667
       },
-      "rightBorder": {
+      "right": {
         "x": 328.488535714286,
         "y": 723
       },
@@ -24738,11 +24738,11 @@ var resultOne = `
         "x": 334.563882352941,
         "y": 8914.33333333333
       },
-      "leftBorder": {
+      "left": {
         "x": 333.546882352941,
         "y": 556
       },
-      "rightBorder": {
+      "right": {
         "x": 335.162117647059,
         "y": 574.666666666667
       },
@@ -24753,11 +24753,11 @@ var resultOne = `
         "x": 330.309428571429,
         "y": 6416.33333333333
       },
-      "leftBorder": {
+      "left": {
         "x": 329.884553571429,
         "y": 670.333333333333
       },
-      "rightBorder": {
+      "right": {
         "x": 331.034294117647,
         "y": 664.333333333333
       },
@@ -24768,11 +24768,11 @@ var resultOne = `
         "x": 328.24575,
         "y": 3173
       },
-      "leftBorder": {
+      "left": {
         "x": 326.795545454545,
         "y": 632.666666666667
       },
-      "rightBorder": {
+      "right": {
         "x": 328.488535714286,
         "y": 723
       },
@@ -24783,11 +24783,11 @@ var resultOne = `
         "x": 352.533024,
         "y": 2411.66666666667
       },
-      "leftBorder": {
+      "left": {
         "x": 351.937784,
         "y": 549.333333333333
       },
-      "rightBorder": {
+      "right": {
         "x": 353.544932,
         "y": 481.666666666667
       },
@@ -24798,11 +24798,11 @@ var resultOne = `
         "x": 341.503411764706,
         "y": 2069
       },
-      "leftBorder": {
+      "left": {
         "x": 341.204294117647,
         "y": 462
       },
-      "rightBorder": {
+      "right": {
         "x": 341.802529411765,
         "y": 480.333333333333
       },
@@ -24813,11 +24813,11 @@ var resultOne = `
         "x": 361.986291666667,
         "y": 2042.33333333333
       },
-      "leftBorder": {
+      "left": {
         "x": 361.808666666667,
         "y": 483
       },
-      "rightBorder": {
+      "right": {
         "x": 362.282333333333,
         "y": 497.666666666667
       },
@@ -24828,11 +24828,11 @@ var resultOne = `
         "x": 351.58064,
         "y": 1855
       },
-      "leftBorder": {
+      "left": {
         "x": 350.9854,
         "y": 656.666666666667
       },
-      "rightBorder": {
+      "right": {
         "x": 351.818736,
         "y": 518.666666666667
       },

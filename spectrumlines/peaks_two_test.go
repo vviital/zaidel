@@ -21,11 +21,11 @@ var peaksTwoJSON = `
         "x": 279.580521126761,
         "y": 4474
       },
-      "leftBorder": {
+      "left": {
         "x": 278.916647887324,
         "y": 700
       },
-      "rightBorder": {
+      "right": {
         "x": 280.66685915493,
         "y": 710.8
       },
@@ -36,11 +36,11 @@ var peaksTwoJSON = `
         "x": 317.942832684825,
         "y": 3475.8
       },
-      "leftBorder": {
+      "left": {
         "x": 317.584350194553,
         "y": 618.2
       },
-      "rightBorder": {
+      "right": {
         "x": 318.719544747082,
         "y": 606.4
       },
@@ -51,11 +51,11 @@ var peaksTwoJSON = `
         "x": 280.304746478873,
         "y": 3108.4
       },
-      "leftBorder": {
+      "left": {
         "x": 278.916647887324,
         "y": 700
       },
-      "rightBorder": {
+      "right": {
         "x": 280.66685915493,
         "y": 710.8
       },
@@ -66,11 +66,11 @@ var peaksTwoJSON = `
       "x": 315.911431906615,
       "y": 2258
     },
-    "leftBorder": {
+    "left": {
       "x": 315.254214007782,
       "y": 585.4
     },
-    "rightBorder": {
+    "right": {
       "x": 316.508902723735,
       "y": 609.2
     },
@@ -81,11 +81,11 @@ var peaksTwoJSON = `
       "x": 334.982647058824,
       "y": 2358
     },
-    "leftBorder": {
+    "left": {
       "x": 334.743352941177,
       "y": 617.4
     },
-    "rightBorder": {
+    "right": {
       "x": 335.162117647059,
       "y": 705.2
     },
@@ -96,11 +96,11 @@ var peaksTwoJSON = `
       "x": 373.76875,
       "y": 1702.6
     },
-    "leftBorder": {
+    "left": {
       "x": 373.4135,
       "y": 664.8
     },
-    "rightBorder": {
+    "right": {
       "x": 374.301625,
       "y": 691
     },
@@ -111,11 +111,11 @@ var peaksTwoJSON = `
       "x": 336.179117647059,
       "y": 1657.6
     },
-    "leftBorder": {
+    "left": {
       "x": 335.999647058824,
       "y": 677.4
     },
-    "rightBorder": {
+    "right": {
       "x": 336.358588235294,
       "y": 641
     },
@@ -126,11 +126,11 @@ var peaksTwoJSON = `
       "x": 285.25361971831,
       "y": 1554.8
     },
-    "leftBorder": {
+    "left": {
       "x": 284.770802816901,
       "y": 671.4
     },
-    "rightBorder": {
+    "right": {
       "x": 285.676084507042,
       "y": 657.2
     },
@@ -141,11 +141,11 @@ var peaksTwoJSON = `
       "x": 358.544948,
       "y": 1368.4
     },
-    "leftBorder": {
+    "left": {
       "x": 357.652088,
       "y": 636.8
     },
-    "rightBorder": {
+    "right": {
       "x": 359.675904,
       "y": 586.2
     },
@@ -156,11 +156,11 @@ var peaksTwoJSON = `
       "x": 323.499311284047,
       "y": 1310.8
     },
-    "leftBorder": {
+    "left": {
       "x": 323.200575875486,
       "y": 601
     },
-    "rightBorder": {
+    "right": {
       "x": 324.276023346303,
       "y": 702.6
     },
@@ -171,11 +171,11 @@ var peaksTwoJSON = `
       "x": 337.315764705882,
       "y": 1421.6
     },
-    "leftBorder": {
+    "left": {
       "x": 337.076470588235,
       "y": 647
     },
-    "rightBorder": {
+    "right": {
       "x": 337.495235294118,
       "y": 629
     },
@@ -186,11 +186,11 @@ var peaksTwoJSON = `
       "x": 368.558416666667,
       "y": 1109
     },
-    "leftBorder": {
+    "left": {
       "x": 367.966333333333,
       "y": 498.6
     },
-    "rightBorder": {
+    "right": {
       "x": 369.1505,
       "y": 498.2
     },
@@ -201,11 +201,11 @@ var peaksTwoJSON = `
       "x": 338.452411764706,
       "y": 1174.4
     },
-    "leftBorder": {
+    "left": {
       "x": 337.973823529412,
       "y": 578.6
     },
-    "rightBorder": {
+    "right": {
       "x": 338.990823529412,
       "y": 548.8
     },
@@ -216,11 +216,11 @@ var peaksTwoJSON = `
       "x": 370.689916666667,
       "y": 1034.4
     },
-    "leftBorder": {
+    "left": {
       "x": 370.275458333333,
       "y": 520.6
     },
-    "rightBorder": {
+    "right": {
       "x": 371.104375,
       "y": 546.2
     },
@@ -231,11 +231,11 @@ var peaksTwoJSON = `
       "x": 376.018666666667,
       "y": 1223.2
     },
-    "leftBorder": {
+    "left": {
       "x": 375.781833333333,
       "y": 776.2
     },
-    "rightBorder": {
+    "right": {
       "x": 376.433125,
       "y": 752.8
     },
@@ -246,11 +246,11 @@ var peaksTwoJSON = `
       "x": 283.744816901408,
       "y": 1153.4
     },
-    "leftBorder": {
+    "left": {
       "x": 282.718830985915,
       "y": 663.4
     },
-    "rightBorder": {
+    "right": {
       "x": 284.469042253521,
       "y": 670.4
     },
@@ -261,11 +261,11 @@ var peaksTwoJSON = `
       "x": 334.204941176471,
       "y": 1068.8
     },
-    "leftBorder": {
+    "left": {
       "x": 334.025470588235,
       "y": 644
     },
-    "rightBorder": {
+    "right": {
       "x": 334.384411764706,
       "y": 648.2
     },
@@ -276,11 +276,11 @@ var peaksTwoJSON = `
       "x": 308.858104072398,
       "y": 1095.4
     },
-    "leftBorder": {
+    "left": {
       "x": 308.677805429864,
       "y": 646
     },
-    "rightBorder": {
+    "right": {
       "x": 309.518494163424,
       "y": 599
     },
@@ -291,11 +291,11 @@ var peaksTwoJSON = `
       "x": 359.080664,
       "y": 992
     },
-    "leftBorder": {
+    "left": {
       "x": 357.652088,
       "y": 636.8
     },
-    "rightBorder": {
+    "right": {
       "x": 359.675904,
       "y": 586.2
     },
@@ -311,11 +311,11 @@ var spectrumLinesTwoJSON = `
       "x": 279.580521126761,
       "y": 4474
     },
-    "leftBorder": {
+    "left": {
       "x": 278.916647887324,
       "y": 700
     },
-    "rightBorder": {
+    "right": {
       "x": 280.66685915493,
       "y": 710.8
     },
@@ -472,11 +472,11 @@ var spectrumLinesTwoJSON = `
       "x": 317.942832684825,
       "y": 3475.8
     },
-    "leftBorder": {
+    "left": {
       "x": 317.584350194553,
       "y": 618.2
     },
-    "rightBorder": {
+    "right": {
       "x": 318.719544747082,
       "y": 606.4
     },
@@ -689,11 +689,11 @@ var spectrumLinesTwoJSON = `
       "x": 280.304746478873,
       "y": 3108.4
     },
-    "leftBorder": {
+    "left": {
       "x": 278.916647887324,
       "y": 700
     },
-    "rightBorder": {
+    "right": {
       "x": 280.66685915493,
       "y": 710.8
     },
@@ -962,11 +962,11 @@ var spectrumLinesTwoJSON = `
       "x": 315.911431906615,
       "y": 2258
     },
-    "leftBorder": {
+    "left": {
       "x": 315.254214007782,
       "y": 585.4
     },
-    "rightBorder": {
+    "right": {
       "x": 316.508902723735,
       "y": 609.2
     },
@@ -1187,11 +1187,11 @@ var spectrumLinesTwoJSON = `
       "x": 334.982647058824,
       "y": 2358
     },
-    "leftBorder": {
+    "left": {
       "x": 334.743352941177,
       "y": 617.4
     },
-    "rightBorder": {
+    "right": {
       "x": 335.162117647059,
       "y": 705.2
     },
@@ -1372,11 +1372,11 @@ var spectrumLinesTwoJSON = `
       "x": 373.76875,
       "y": 1702.6
     },
-    "leftBorder": {
+    "left": {
       "x": 373.4135,
       "y": 664.8
     },
-    "rightBorder": {
+    "right": {
       "x": 374.301625,
       "y": 691
     },
@@ -1533,11 +1533,11 @@ var spectrumLinesTwoJSON = `
       "x": 336.179117647059,
       "y": 1657.6
     },
-    "leftBorder": {
+    "left": {
       "x": 335.999647058824,
       "y": 677.4
     },
-    "rightBorder": {
+    "right": {
       "x": 336.358588235294,
       "y": 641
     },
@@ -1798,11 +1798,11 @@ var spectrumLinesTwoJSON = `
       "x": 285.25361971831,
       "y": 1554.8
     },
-    "leftBorder": {
+    "left": {
       "x": 284.770802816901,
       "y": 671.4
     },
-    "rightBorder": {
+    "right": {
       "x": 285.676084507042,
       "y": 657.2
     },
@@ -1959,11 +1959,11 @@ var spectrumLinesTwoJSON = `
       "x": 358.544948,
       "y": 1368.4
     },
-    "leftBorder": {
+    "left": {
       "x": 357.652088,
       "y": 636.8
     },
-    "rightBorder": {
+    "right": {
       "x": 359.675904,
       "y": 586.2
     },
@@ -2200,11 +2200,11 @@ var spectrumLinesTwoJSON = `
       "x": 323.499311284047,
       "y": 1310.8
     },
-    "leftBorder": {
+    "left": {
       "x": 323.200575875486,
       "y": 601
     },
-    "rightBorder": {
+    "right": {
       "x": 324.276023346303,
       "y": 702.6
     },
@@ -2353,11 +2353,11 @@ var spectrumLinesTwoJSON = `
       "x": 337.315764705882,
       "y": 1421.6
     },
-    "leftBorder": {
+    "left": {
       "x": 337.076470588235,
       "y": 647
     },
-    "rightBorder": {
+    "right": {
       "x": 337.495235294118,
       "y": 629
     },
@@ -2538,11 +2538,11 @@ var spectrumLinesTwoJSON = `
       "x": 368.558416666667,
       "y": 1109
     },
-    "leftBorder": {
+    "left": {
       "x": 367.966333333333,
       "y": 498.6
     },
-    "rightBorder": {
+    "right": {
       "x": 369.1505,
       "y": 498.2
     },
@@ -2699,11 +2699,11 @@ var spectrumLinesTwoJSON = `
       "x": 338.452411764706,
       "y": 1174.4
     },
-    "leftBorder": {
+    "left": {
       "x": 337.973823529412,
       "y": 578.6
     },
-    "rightBorder": {
+    "right": {
       "x": 338.990823529412,
       "y": 548.8
     },
@@ -2860,11 +2860,11 @@ var spectrumLinesTwoJSON = `
       "x": 370.689916666667,
       "y": 1034.4
     },
-    "leftBorder": {
+    "left": {
       "x": 370.275458333333,
       "y": 520.6
     },
-    "rightBorder": {
+    "right": {
       "x": 371.104375,
       "y": 546.2
     },
@@ -3005,11 +3005,11 @@ var spectrumLinesTwoJSON = `
       "x": 376.018666666667,
       "y": 1223.2
     },
-    "leftBorder": {
+    "left": {
       "x": 375.781833333333,
       "y": 776.2
     },
-    "rightBorder": {
+    "right": {
       "x": 376.433125,
       "y": 752.8
     },
@@ -3166,11 +3166,11 @@ var spectrumLinesTwoJSON = `
       "x": 283.744816901408,
       "y": 1153.4
     },
-    "leftBorder": {
+    "left": {
       "x": 282.718830985915,
       "y": 663.4
     },
-    "rightBorder": {
+    "right": {
       "x": 284.469042253521,
       "y": 670.4
     },
@@ -3367,11 +3367,11 @@ var spectrumLinesTwoJSON = `
       "x": 334.204941176471,
       "y": 1068.8
     },
-    "leftBorder": {
+    "left": {
       "x": 334.025470588235,
       "y": 644
     },
-    "rightBorder": {
+    "right": {
       "x": 334.384411764706,
       "y": 648.2
     },
@@ -3576,11 +3576,11 @@ var spectrumLinesTwoJSON = `
       "x": 308.858104072398,
       "y": 1095.4
     },
-    "leftBorder": {
+    "left": {
       "x": 308.677805429864,
       "y": 646
     },
-    "rightBorder": {
+    "right": {
       "x": 309.518494163424,
       "y": 599
     },
@@ -3705,11 +3705,11 @@ var spectrumLinesTwoJSON = `
       "x": 359.080664,
       "y": 992
     },
-    "leftBorder": {
+    "left": {
       "x": 357.652088,
       "y": 636.8
     },
-    "rightBorder": {
+    "right": {
       "x": 359.675904,
       "y": 586.2
     },
