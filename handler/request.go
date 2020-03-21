@@ -12,8 +12,8 @@ import (
 
 // V1RequestSpectrumPoint represents spectrum point data
 type V1RequestSpectrumPoint struct {
-	WaveLength float64 `json:"waveLength"`
-	Intensity  float64 `json:"Intensity"`
+	WaveLength float64 `json:"x"`
+	Intensity  float64 `json:"y"`
 }
 
 // ToPoint returns point

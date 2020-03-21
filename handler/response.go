@@ -41,7 +41,7 @@ func V1ResponseSpectrumPeaksFromDatasource(result peaksdatasource.PeaksModel) (r
 type V1ResponseSpectrumLines struct {
 	Settings         spectrumlines.Settings         `json:"settings"`
 	PeaksCount       int                            `json:"peaksCount"`
-	PeakWithElements []spectrumlines.DeterminedPeak `json:"peakWithElements"`
+	PeakWithElements []spectrumlines.DeterminedPeak `json:"peaksWithElements"`
 }
 
 // V1ResponseSpectrumLinesFromFinderResult remap inner data structure to the client's expected result

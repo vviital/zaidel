@@ -4,8 +4,8 @@ import "github.com/vviital/zaidel/geometry"
 
 // SpectrumRecord struct
 type SpectrumRecord struct {
-	WaveLength float64 `json:"wave_length"`
-	Intensity  float64 `json:"intensity"`
+	WaveLength float64 `json:"x"`
+	Intensity  float64 `json:"y"`
 }
 
 // ToPoint returns point from record

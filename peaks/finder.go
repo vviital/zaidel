@@ -548,6 +548,13 @@ func validateParams(settings searchSettings) error {
 	return nil
 }
 
+func min(a, b int) int {
+	if a > b {
+		return b
+	}
+	return a
+}
+
 // Find return information about peaks
 func Find(points geometry.Coordinates, peakSearchSettings PeakSearchSettings) (FinderResult, error) {
 	settings := newSearchSettings(points, peakSearchSettings)
@@ -576,9 +583,10 @@ func Find(points geometry.Coordinates, peakSearchSettings PeakSearchSettings) (F
 	backgroundData := CombineCoordinatesWithFloats(points, background)
 
 	for i := 0; i < peaksCount; i++ {
-		var binR = 1 + (int)(fPositionX[i]+0.5)
-		var binM = (int)(fPositionX[i] + 0.5)
-		var binL = (int)(fPositionX[i])
+		// TODO: check why sometimes it's goes beyond the array size
+		var binR = min(1+(int)(fPositionX[i]+0.5), len(points)-1)
+		var binM = min((int)(fPositionX[i]+0.5), len(points)-1)
+		var binL = min((int)(fPositionX[i]), len(points)-1)
 
 		point := geometry.Coordinates{points[binR], points[binM], points[binL]}.GetMaxPointByY()
 

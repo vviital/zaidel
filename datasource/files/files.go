@@ -14,8 +14,8 @@ type File struct {
 	ID      string `json:"id"`
 	OwnerID string `json"ownerID"`
 	Content []struct {
-		WaveLength float64 `json:"waveLength"`
-		Intensity  float64 `json:"Intensity"`
+		WaveLength float64 `json:"x"`
+		Intensity  float64 `json:"y"`
 	}
 }
 
