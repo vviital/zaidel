@@ -19,7 +19,7 @@ func parseRecord(slice []string) Element {
 	if err != nil {
 		log.Panic(err)
 	}
-	ionizationStage, err := strconv.Atoi(slice[2])
+	stage, err := strconv.Atoi(slice[2])
 	if err != nil {
 		log.Panic(err)
 	}
@@ -30,7 +30,7 @@ func parseRecord(slice []string) Element {
 
 	return Element{
 		Intensity:       intensity,
-		IonizationStage: ionizationStage,
+		IonizationStage: stage,
 		Name:            slice[1],
 		WaveLength:      waveLength,
 	}

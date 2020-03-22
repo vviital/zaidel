@@ -20,7 +20,7 @@ type Settings struct {
 // Element struct
 type Element struct {
 	database.Element
-	IsSearchCriteriaMatched bool    `json:"isSearchCriteriaMatched"`
+	IsSearchCriteriaMatched bool    `json:"matched"`
 	Distance                float64 `json:"similarity"`
 }
 
