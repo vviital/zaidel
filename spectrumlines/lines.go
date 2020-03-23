@@ -2,6 +2,7 @@ package spectrumlines
 
 import (
 	"context"
+	"fmt"
 	"math"
 	"sort"
 
@@ -68,8 +69,8 @@ func getPeakWithElements(peak peaks.Peak, settings Settings, elements chan datab
 }
 
 func isMatched(element database.Element, settings Settings) bool {
-	return (settings.MaxIntensity > 0 && element.Intensity < settings.MaxIntensity) ||
-		(settings.MinIntensity > 0 && element.Intensity > settings.MinIntensity) ||
+	return (settings.MaxIntensity > 0 && element.Intensity < settings.MaxIntensity) &&
+		(settings.MinIntensity > 0 && element.Intensity > settings.MinIntensity) &&
 		(settings.MaxIonizationLevel > 0 && element.IonizationStage < settings.MaxIonizationLevel)
 }
 
@@ -93,4 +94,105 @@ func Find(ctx context.Context, points []peaks.Peak, settings Settings) (res []De
 	}
 
 	return
+}
+
+type elementWithDistance struct {
+	distance float64
+	element  Element
+}
+
+// AuthMatch matches peaks with spectrum lines
+func AuthMatch(peaks []DeterminedPeak) (suggestions []AutoSuggestion) {
+	suggestionsPerPeak := make(map[int][]elementWithDistance)
+
+	for index, peak := range peaks {
+		linesPerElements := make(map[string]*elementWithDistance)
+		for _, element := range peak.Elements {
+			if !element.IsSearchCriteriaMatched {
+				continue
+			}
+
+			currentDistance := math.Abs(peak.Peak.Point.X - element.WaveLength)
+
+			fmt.Println("Current distance:", currentDistance, element.Name)
+
+			if linesPerElements[element.Name] == nil {
+				fmt.Println("Appending first", currentDistance)
+				value := elementWithDistance{
+					distance: currentDistance,
+					element:  element,
+				}
+				linesPerElements[element.Name] = &value
+				continue
+			}
+
+			if linesPerElements[element.Name].distance > currentDistance {
+				value := elementWithDistance{
+					distance: currentDistance,
+					element:  element,
+				}
+				linesPerElements[element.Name] = &value
+			}
+		}
+
+		var candidates []elementWithDistance
+		for _, candidate := range linesPerElements {
+			candidates = append(candidates, *candidate)
+		}
+
+		suggestionsPerPeak[index] = candidates
+	}
+
+	alreadyMatchedElements := make(map[string]int)
+	alreadyMatchedPeaks := make(map[int]struct{})
+
+	calculateDistance := func(candidate elementWithDistance) float64 {
+		if alreadyMatchedElements[candidate.element.Name] != 0 {
+			return candidate.distance * (1 + 0.1*float64(alreadyMatchedElements[candidate.element.Name])) // Make match less likely
+		}
+		return candidate.distance
+	}
+
+	// Number of iterations
+	for range peaks {
+		match := -1
+		elementWithDistance := elementWithDistance{}
+
+		for index := range peaks {
+			if _, exists := alreadyMatchedPeaks[index]; exists {
+				continue
+			}
+
+			peakCandidates := suggestionsPerPeak[index]
+			if len(peakCandidates) == 0 {
+				continue
+			}
+
+			sort.SliceStable(peakCandidates, func(i, j int) bool {
+				return calculateDistance(peakCandidates[i]) < calculateDistance(peakCandidates[j])
+			})
+
+			currentCandidate := peakCandidates[0]
+
+			if match == -1 || calculateDistance(currentCandidate) < calculateDistance(elementWithDistance) {
+				fmt.Println("Choosing the best", " Prev: ", calculateDistance(elementWithDistance), " Next: ", calculateDistance(currentCandidate))
+				match = index
+				elementWithDistance = currentCandidate
+			}
+		}
+
+		if match != -1 {
+			fmt.Println("--- match ---", match, peaks[match].Peak.Point.X, elementWithDistance.element.Name)
+
+			alreadyMatchedPeaks[match] = struct{}{}
+			alreadyMatchedElements[elementWithDistance.element.Name] = alreadyMatchedElements[elementWithDistance.element.Name] + 1
+
+			suggestions = append(suggestions, AutoSuggestion{
+				Peak:    peaks[match].Peak,
+				Element: elementWithDistance.element,
+			})
+		}
+	}
+
+	return suggestions
 }

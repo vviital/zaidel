@@ -3,37 +3,27 @@ package handler
 import (
 	"encoding/json"
 	"net/http"
-	"time"
 
-	peaksdatasource "github.com/vviital/zaidel/datasource/peaks"
 	"github.com/vviital/zaidel/peaks"
 	"github.com/vviital/zaidel/spectrumlines"
 )
 
 // V1ResponseSpectrumPeaks represents peaks response to the client
 type V1ResponseSpectrumPeaks struct {
-	Created                time.Time                `json:"created"`
-	ID                     string                   `json:"id"`
 	OriginalPeaksPositions []float64                `json:"originalPeaksPositions,omitempty"`
-	OwnerID                string                   `json:"ownerId"`
 	Peaks                  []peaks.Peak             `json:"peaks,omitempty"`
 	PeaksCount             int                      `json:"peaksCount"`
 	Settings               peaks.PeakSearchSettings `json:"settings"`
 	SpectrumArea           float64                  `json:"spectrumArea"`
-	Updated                time.Time                `json:"updated"`
 }
 
 // V1ResponseSpectrumPeaksFromDatasource remap inner data structure to the client's expected result
-func V1ResponseSpectrumPeaksFromDatasource(result peaksdatasource.PeaksModel) (resp V1ResponseSpectrumPeaks) {
-	resp.ID = result.ID
-	resp.OwnerID = result.OwnerID
-	resp.OriginalPeaksPositions = result.OriginalPeaksPositions
-	resp.Peaks = result.Peaks
-	resp.PeaksCount = result.PeaksCount
-	resp.Settings = result.Settings
-	resp.SpectrumArea = result.SpectrumArea
-	resp.Created = result.Created
-	resp.Updated = result.Updated
+func V1ResponseSpectrumPeaksResult(peaks peaks.FinderResult, settings peaks.PeakSearchSettings) (resp V1ResponseSpectrumPeaks) {
+	resp.OriginalPeaksPositions = peaks.OriginalPeaksPositions
+	resp.Peaks = peaks.Peaks
+	resp.PeaksCount = peaks.PeaksCount
+	resp.Settings = settings
+	resp.SpectrumArea = peaks.SpectrumArea
 	return
 }
 
@@ -42,13 +32,15 @@ type V1ResponseSpectrumLines struct {
 	Settings         spectrumlines.Settings         `json:"settings"`
 	PeaksCount       int                            `json:"peaksCount"`
 	PeakWithElements []spectrumlines.DeterminedPeak `json:"peaksWithElements"`
+	AutoSuggestions  []spectrumlines.AutoSuggestion `json:"autoSuggestions"`
 }
 
 // V1ResponseSpectrumLinesFromFinderResult remap inner data structure to the client's expected result
-func V1ResponseSpectrumLinesFromFinderResult(result []spectrumlines.DeterminedPeak, settings spectrumlines.Settings) (resp V1ResponseSpectrumLines) {
+func V1ResponseSpectrumLinesFromFinderResult(result []spectrumlines.DeterminedPeak, settings spectrumlines.Settings, suggestions []spectrumlines.AutoSuggestion) (resp V1ResponseSpectrumLines) {
 	resp.PeakWithElements = result
 	resp.PeaksCount = len(result)
 	resp.Settings = settings
+	resp.AutoSuggestions = suggestions
 	return
 }
 

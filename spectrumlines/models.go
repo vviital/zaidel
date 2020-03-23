@@ -36,3 +36,8 @@ func (p *DeterminedPeak) ToJSON() string {
 	str, _ := json.Marshal(p)
 	return string(str)
 }
+
+type AutoSuggestion struct {
+	Peak    peaks.Peak `json:"peak,omitempty"`
+	Element Element    `json:"element,omitempty"`
+}
