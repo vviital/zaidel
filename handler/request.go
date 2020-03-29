@@ -78,6 +78,18 @@ func V1CalculateSpectrumLinesRequestFromRequestBody(r *http.Request) (body V1Cal
 	return
 }
 
+// V1CalculateComparisonRequest object structure
+type V1CalculateComparisonRequest struct {
+	ID string `json:"id"`
+}
+
+// V1CalculateComparisonRequestFromBody returns V1CalculateComparisonRequest object from request body
+func V1CalculateComparisonRequestFromBody(r *http.Request) (body V1CalculateComparisonRequest) {
+	defer r.Body.Close()
+	json.NewDecoder(r.Body).Decode(&body)
+	return
+}
+
 func extractInternalForwardableHeaders(r *http.Request) http.Header {
 	var headers = make(http.Header)
 

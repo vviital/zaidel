@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/vviital/zaidel/comparisons"
 	"github.com/vviital/zaidel/peaks"
 	"github.com/vviital/zaidel/spectrumlines"
 
@@ -99,6 +100,19 @@ func V1GetSpectrumLinesByID(w http.ResponseWriter, r *http.Request) {
 // V1UpdateSpectrumLinesByID responds with peaks by ID
 func V1UpdateSpectrumLinesByID(w http.ResponseWriter, r *http.Request) {
 
+}
+
+// V1Compare finds similarities between experiments
+func V1Compare(w http.ResponseWriter, r *http.Request) {
+	body := V1CalculateComparisonRequestFromBody(r)
+
+	log.Print("Starting to compare results for the comparison: ", body.ID)
+
+	sendJSON(w, struct {
+		Ok bool `json:"ok"`
+	}{Ok: true})
+
+	go comparisons.Compare(body.ID, extractInternalForwardableHeaders(r))
 }
 
 func V1HealthCheck(w http.ResponseWriter, r *http.Request) {

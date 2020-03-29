@@ -24,6 +24,9 @@ func main() {
 	r.HandleFunc("/spectrumlines/{id}", handler.V1GetSpectrumLinesByID).Methods(http.MethodPut, http.MethodPatch)
 	r.HandleFunc("/spectrumlines", handler.V1CalculateSpectrumLines).Methods(http.MethodPost)
 
+	// Comparison analysis
+	r.HandleFunc("/comparison", handler.V1Compare).Methods(http.MethodPost)
+
 	r.HandleFunc("/service/health", handler.V1HealthCheck).Methods(http.MethodGet)
 
 	srv := &http.Server{
