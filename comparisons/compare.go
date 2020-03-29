@@ -74,7 +74,7 @@ func Compare(comparisonID string, headers http.Header) {
 }
 
 func calculateDistance(x1, y1, x2, y2 float64) float64 {
-	return math.Pow(x1-x2, 2) + math.Pow(y1-y2, 2)
+	return math.Pow(math.Pow(x1-x2, 2)+math.Pow(y1-y2, 2), 0.5)
 }
 
 func calculateDistanceBetweenPeaks(r1, r2 researches.ExperimentResults) float64 {
@@ -90,7 +90,7 @@ func calculateSimilarity(source, target []researches.ExperimentResults) (score f
 				continue
 			}
 
-			if bestMatchIndex == -1 && calculateDistanceBetweenPeaks(resultItem, sourceResultItem) < calculateDistanceBetweenPeaks(resultItem, source[bestMatchIndex]) {
+			if bestMatchIndex == -1 || calculateDistanceBetweenPeaks(resultItem, sourceResultItem) < calculateDistanceBetweenPeaks(resultItem, source[bestMatchIndex]) {
 				bestMatchIndex = i
 			}
 		}
@@ -114,7 +114,7 @@ func normalizeResults(similarities []researches.Similarities) {
 		}
 	}
 
-	for _, similarity := range similarities {
-		similarity.Percentage = similarity.Percentage / maxScore
+	for i, similarity := range similarities {
+		similarities[i].Percentage = similarity.Percentage / maxScore
 	}
 }

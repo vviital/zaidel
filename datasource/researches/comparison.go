@@ -28,7 +28,7 @@ type Comparison struct {
 	LockedAt       time.Time      `json:"lockedAt"`
 	OwnerID        string         `json:"ownerID"`
 	Processed      int64          `json:"processed"`
-	ResearchID     string         `json:"researchID"`
+	ResearchID     string         `json:"baseResearchID"`
 	Similarities   []Similarities `json:"similarities"`
 	Total          int64          `json:"total"`
 	UpdatedAt      time.Time      `json:"updatedAt"`
